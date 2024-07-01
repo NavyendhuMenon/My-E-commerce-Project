@@ -63,6 +63,7 @@ export const addToWishlist = async (req, res) => {
 // removing from wishlist
 
 export const removeFromWishlist = async (req, res) => {
+ 
   try {
     const userId = req.user.id;
 
@@ -87,8 +88,9 @@ export const removeFromWishlist = async (req, res) => {
     }
 
     await user.save();
-
+    
     res.status(200).json({ message: "Product removed from wishlist" });
+ 
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
@@ -101,7 +103,9 @@ export const removeFromWishlist = async (req, res) => {
 //loadCart
 
 export const loadCart = async (req, res) => {
+ 
   try {
+
     const userId = req.user.id;
     const myCart = await Cart.findOne({ userId }).populate("product.productId");
 
@@ -115,6 +119,7 @@ export const loadCart = async (req, res) => {
   } catch (error) {
     console.log(error.message);
   }
+
 };
 
 
@@ -125,6 +130,7 @@ export const addToCart = async (req, res) => {
   console.log("Hit on add to cart endpoint");
 
   try {
+
     const { productId, quantity } = req.body;
     const userId = req.user.id;
 
@@ -174,6 +180,7 @@ export const addToCart = async (req, res) => {
 export const deleteFromCart = async (req,res)=>{
 
 try{
+
   const userId= req.user.id 
   console.log("on remove from cart with userid", userId)
 
@@ -211,7 +218,142 @@ if (productIndex > -1) {
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
  
-
-
    
-}
+};
+
+
+
+//increment and decrement cart 
+
+export const incrementQuantity = async (req,res)=>{
+  
+  try {
+        
+    console.log("iam on incriment controller")
+
+    const { productId, action  }= req.body
+    const userId = req.user.id;
+
+    console.log("Incriment product id :",userId ,"and", productId )
+
+    const userCart = await Cart.findOne({ userId })
+
+    if(!userCart){
+
+      return res.status(400).json({ success: false, message: "Cart not found" })
+
+    }
+
+    const product = userCart. product. find ((item)=> item.productId.toString()===productId.toString());
+
+    if (!product){
+
+      return res.status(404).json({ success: false, message: "Product not found in cart" });
+
+    }
+
+ 
+
+      const productData = await Product.findById(productId)
+
+      if (!productData) {
+        return res.status(404).json({ success: false, message: "Product not found in inventory" });
+      }
+
+    if (action === 'increment') {
+
+      if (product.quantity < productData.quantity) {
+
+        //product.quantity is the product in the user's cart
+        // productData.quantity  is the total available quantity of the product in the store or inventory
+       
+        product.quantity += 1;
+
+        await userCart.save();
+
+        return res.status(200).json({ success: true, message: "Quantity incremented successfully", newQuantity: product.quantity });
+      } else {
+        return res.status(400).json({ success: false, message: "Out of stock" });
+      }
+
+    }else if (action === 'decrement') {
+      
+      if (product.quantity >1){
+
+        product.quantity -=1
+  
+        await userCart.save()
+  
+        return res.status(200).json({ success: true, message: "Quantity decremented successfully", newQuantity: product.quantity });
+      }else {
+          return res.status(400).json({ success: false, message: "Quantity cannot be less than 1" });
+      }
+    }else {
+      return res.status(400).json({ success: false, message: "Invalid action" });
+    }
+  
+
+    // }else {
+    //   return res.status(404).json({ success: false, message: "Product not found in cart" });
+    // }
+
+  }catch (error) {
+    console.log(error.message);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+
+};
+
+
+
+//decrement cart 
+
+
+// export const decrementCart = async (req,res)=>{
+
+//   console.log('Iam on decrenent controller')
+
+//  try{
+
+//   const {productId} = req.body
+//   const userId = req.user.id;
+
+//   const userCart = await Cart.findOne({userId})
+
+//   if(!userCart){
+//     return res.status(400).json({ success: false, message: "Cart not found" });
+//   }
+
+//    //checking if the product already exists in the cart
+
+//   const product = userCart.product.find(
+//     (item) => item.productId.toString() === productId.toString()
+//   );
+
+
+//   if (product){
+//     if (product.quantity >1){
+
+//       product.quantity -=1
+
+//       await userCart.save()
+
+//       return res.status(200).json({ success: true, message: "Quantity decremented successfully", newQuantity: product.quantity });
+//     }else {
+//         return res.status(400).json({ success: false, message: "Quantity cannot be less than 1" });
+//     }
+//   }else {
+//     return res.status(404).json({ success: false, message: "Product not found in cart" });
+//   }
+
+//  }catch (error) {
+//     console.log(error.message);
+//     res.status(500).json({ success: false, message: "Internal Server Error" });
+//  }
+
+
+// }
+
+
+
+

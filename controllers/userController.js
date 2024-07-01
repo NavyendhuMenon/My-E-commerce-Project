@@ -285,7 +285,7 @@ export const verifyLogin = async (req, res) => {
     if (!isMatch) {
       return res.status(401).send({ message: "Incorrect email or password" });
     }
-
+o
     // Generate token with user role information
     const token = jwt.sign(
       { id: userData._id, email: userData.email, isAdmin: userData.isAdmin },
@@ -627,20 +627,6 @@ export const loadShopProduct = async (req, res) => {
       res.status(500).send('Internal Server Error');
   }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

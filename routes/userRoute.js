@@ -5,6 +5,7 @@ import *as userController from "../controllers/userController.js"
 import *as auth from "../middleware/auth.js"
 import cookieParser from "cookie-parser";
 import *as cartController from "../controllers/cartController.js"
+import *as profileController from "../controllers/userProfileController.js"
 import passport from "../helper/passportHelper.js"
 import nocache from "nocache"
 userRoute.set('view engine','ejs')
@@ -61,11 +62,17 @@ userRoute.delete('/wishlist/remove/:id', auth.isLogin,isUser,cartController.remo
 userRoute.get('/mycart',auth.isLogin,isUser,cartController.loadCart)
 userRoute.post('/mycart',auth.isLogin,isUser,cartController.addToCart)
 userRoute.delete('/mycart', auth.isLogin, isUser, cartController.deleteFromCart);
+userRoute.patch('/mycart/update', auth.isLogin, isUser, cartController.incrementQuantity);
 
+
+userRoute.get ('/profile',auth.isLogin,isUser, profileController.loadProfile)
+userRoute.post('/editprofile', auth.isLogin,isUser, profileController.editProfile)
+userRoute.post('/changepassword', auth.isLogin, isUser, profileController.changePassword)
+
+
+userRoute.post('/addaddresses', auth.isLogin,isUser, profileController.addAddress)
 
 userRoute.get('/logout', userController.logout)
-
-
 
 
 

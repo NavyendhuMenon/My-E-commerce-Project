@@ -216,6 +216,7 @@
                       <% } %>
 
                       <script>
+                        
                         function addToCart(productId) {
                           const quantity = 1; // Set default` quantity or get it dynamically if needed
                           fetch(`/mycart`, {
@@ -226,7 +227,8 @@
                             body: JSON.stringify({ productId, quantity })
                           })
                           .then(response => response.json())
-                          .then(data => alert(data.message))
+                          .then(data => 
+                          alert(data.message))
                           
                           .catch(error => console.error('Error:', error));
                         }

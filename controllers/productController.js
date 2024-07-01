@@ -5,7 +5,7 @@ import sharp from "sharp";
 import fs from "fs";
 import { v4 as uuidv4 } from "uuid"; // uuid for unique file names
 
-//=========================================// Category Management==========================================
+//=========================================//Category Management==========================================
 
 //loadCategory
 export const loadCategory = async (req, res) => {
@@ -19,6 +19,7 @@ export const loadCategory = async (req, res) => {
   }
 };
 
+
 //loadEditCategory
 
 export const loadEditCategory = async (req, res) => {
@@ -30,6 +31,7 @@ export const loadEditCategory = async (req, res) => {
     console.error(error);
   }
 };
+
 
 //edit Categories
 
@@ -64,6 +66,7 @@ export const EditCategory = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
+
 
 //block categeory
 export const blockCategory = async (req, res) => {
@@ -136,6 +139,7 @@ export const addCatagories = async (req, res) => {
 // ===============================Multer Function=================================================================
 
 // Multer storage configuration
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "d:\\Users\\user\\Desktop\\BROTOTYPE\\Eatable\\public\\uploads"); // Using relative path
@@ -189,7 +193,7 @@ export const cropImages = async (req, res, next) => {
   }
 };
 
-//============================Product controller=========================================================
+//============================ Product controller =================================================
 
 //listing the products
 
